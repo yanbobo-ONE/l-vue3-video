@@ -28,7 +28,7 @@ vue3-video
 
 ```bash
 # 克隆项目
-git clone https://github.com/yanbobo-ONE/l-vue3-audio.git
+git clone https://github.com/yanbobo-ONE/l-vue3-video.git
 ```
 
 ```bash
