@@ -1,0 +1,333 @@
+/*m-reset.css v1.0.10*/
+/**
+ * REM布局
+ * 
+ * <html rem=1920>
+ * <html rem=750>
+ * 
+ * design 100px  ->  css 1rem
+ * design 150px  ->  css 1.5rem
+ * design 284px  ->  css 2.84rem
+ */
+[rem="1920"] {
+  font-size: 5.2083333333vw;
+}
+
+[rem="750"] {
+  font-size: 13.333333333vw;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  box-sizing: border-box;
+}
+
+/**
+   * 移除body默认margin值.
+   * 统一终端(windows,mac,linux)中文/英文字体.
+   */
+html,
+body {
+  margin: 0;
+  /**  
+      * 中文("PingFang SC","Microsoft YaHei","Hiragino Sans GB","微软雅黑")
+      * 英文字体("Helvetica Neue",Helvetica,Arial) 
+      */
+  font-family: "Pingfang SC", "Hiragino Sans GB", "Helvetica", "Droid Sans", "Microsoft YaHei", "Arial", "sans-serif";
+  font-size: 16px;
+  line-height: 1;
+  width: 100%;
+  height: 100%;
+  background-color: #f5f5f5;
+}
+
+/**
+   * "figure"标签规定独立的流内容（图像、图表、照片、代码等等）
+   */
+figure {
+  margin: 0px;
+}
+
+p {
+  margin: 0px;
+}
+
+/**
+   * 去除列表边距及符号.
+   */
+ul,
+ol,
+dl,
+li,
+dt,
+dd {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/**
+   * 去除IE10中活动链接的灰色背景.
+   */
+a {
+  background-color: transparent;
+  text-decoration: none;
+}
+
+/**
+   * 去除IE6-10中a链接包裹图片蓝色边框.
+   */
+img {
+  border: 0;
+}
+
+/**
+   * 删除表格单元格之间的间距。
+   */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/**
+   * 删除表格单元格之间的间距。
+   * 字体相关属性改为继承
+   */
+button,
+input,
+select,
+textarea {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+/**
+   * IE 8/9/10/11中，去除默认垂直滚动条属性
+   */
+textarea {
+  overflow: auto;
+}
+
+/**
+   * HTML5新模块元素在IE8、9版本浏览器中没有被定义默认样式。为解决该问题，给下列元素添加“block”显示属性。
+   */
+article,
+aside,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section {
+  display: block;
+}
+
+/**
+   * IE 8/9/10/11/12 兼容template标签
+   */
+template {
+  display: none;
+}
+
+/**
+   * 文本的溢出显示省略号  
+   * 添加`class="hidden1"`  1行溢出出现省略号
+   * 添加`class="hidden2"`  2行溢出出现省略号
+   * ...
+   * 添加`class="hidden5"`  5行溢出出现省略号
+   */
+.hidden2,
+.hidden3,
+.hidden4,
+.hidden5 {
+  display: -webkit-box;
+  /* autoprefixer:off */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.hidden1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hidden2 {
+  -webkit-line-clamp: 2;
+}
+
+.hidden3 {
+  -webkit-line-clamp: 3;
+}
+
+.hidden4 {
+  -webkit-line-clamp: 4;
+}
+
+.hidden5 {
+  -webkit-line-clamp: 5;
+}
+
+//blockquote引用文本quotes  属性设置嵌套引用（embedded quotation）的引号类型。
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+
+a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+// 公共样式
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
+
+  .button-group-item {
+    padding-left: 3px;
+  }
+}
+
+//清除浮动  visibility 属性规定元素是否可见。hidden不可见visible可见
+.clearfix {
+  zoom: 1;
+
+  &:after {
+    display: block;
+    clear: both;
+    content: "";
+    visibility: hidden;
+    height: 0;
+  }
+}
+
+// 公共颜色 
+.color1 {
+  color: #00fbff;
+}
+
+.color2 {
+  color: #0092ff;
+}
+
+.color3 {
+  color: #f7b500;
+}
+
+.color4 {
+  color: #fb64aa;
+}
+
+.color5 {
+  color: #FF3366;
+}
+
+

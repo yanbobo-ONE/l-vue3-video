@@ -1,0 +1,36 @@
+{
+  "name": "l-vue3-video",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "keyword": "vue3 video rtmp mp4 m3u8 自定义组件",
+  "description": "基于vue3的video组件使用于MP4,m3u8,rtmp",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/l-vue3-video.umd.js",
+  "module": "./dist/l-vue3-video.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/l-vue3-video.es.js",
+      "require": "./dist/l-vue3-video.umd.js"
+    }
+  },
+  "dependencies": {
+    "element-plus": "^2.6.3",
+    "vue": "^3.4.21"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "sass": "^1.72.0",
+    "vite": "^5.2.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
