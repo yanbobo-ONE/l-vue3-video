@@ -27,6 +27,13 @@ vue3-video
 确保你已经安装了 Node.js 和 npm。
 
 ```bash
+可以使用测试地址
+https://sdk-release.qnsdk.com/VID_20220207_144828.mp4
+rtmp://liteavapp.qcloud.com/live/liteavdemoplayerstreamid
+http://cdn3.toronto360.tv:8081/toronto360/hd/playlist.m3u8
+```
+
+```bash
 # 克隆项目
 git clone https://github.com/yanbobo-ONE/l-vue3-video.git
 ```
