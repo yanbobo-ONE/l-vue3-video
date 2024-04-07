@@ -4,7 +4,7 @@
  * @Author: liuyanbobo
  * @Date: 2024-04-03 13:56:51
  * @LastEditors: liuyanbobo
- * @LastEditTime: 2024-04-03 16:28:33
+ * @LastEditTime: 2024-04-07 10:05:47
 -->
 <template>
   <div class="videoBox">
@@ -40,6 +40,10 @@ const props = defineProps({
   iscontrolBar: {  //是否显示控制条DOM元素，控制台功能存在
     type: Boolean,
     default: true
+  },
+  closeVideo: {  //是否关闭video
+    type: Boolean,
+    default: false
   },
   posterSrc: {  //封面图片
     type: String,
@@ -190,7 +194,6 @@ const currency = (newVal) => {
 }
 watch(() => props.videoSrc, (newVal, oldVal) => {
   if (newVal) {
-    console.log(newVal)
     if (newVal.includes('rtmp')) {
       videoParameter.value.controls = false
       videoParameter.value.controlBar = false
@@ -211,14 +214,21 @@ watch(() => props.videoSrc, (newVal, oldVal) => {
     }
   }
 }, { deep: true, immediate: true });
-//弹框关闭vieobox
+watch(() => props.closeVideo, (newVal, oldVal) => {
+  if (newVal) {
+    handleLog()
+  }
+}, {
+  deep: true, immediate: true
+})
+//关闭销毁vieobox
 const handleLog = () => {
-  var myVideoDiv = document.querySelectorAll("#myVideoBig");
+  // var myVideoDiv = document.querySelectorAll("#myVideoBig");
   var myVideoDivles = document.querySelectorAll("#myVideoBigs");
-  myVideoDiv[0].innerHTML =
-    "<video id='myVideoBig' class='video-js vjs-default-skin vjs-big-play-centered' muted='muted' autoplay='autoplay' loop='loop' data-setup='{}' style='object-fit: fill; width: 100%; height: 100%'><source src=" +
-    video.value +
-    " style='width: 100%;height: 100%' type=" + format.value + "></video>";
+  // myVideoDiv[0].innerHTML =
+  //   "<video id='myVideoBig' class='video-js vjs-default-skin vjs-big-play-centered' muted='muted' autoplay='autoplay' loop='loop' data-setup='{}' style='object-fit: fill; width: 100%; height: 100%'><source src=" +
+  //   videoedit.value +
+  //   " style='width: 100%;height: 100%' type=" + format.value + "></video>";
   if (myVideoDivles.length > 0) {
     playerolder.value.dispose();
     playerolder.value = null;

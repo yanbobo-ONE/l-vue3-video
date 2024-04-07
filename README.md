@@ -14,11 +14,13 @@ vue3-video
         <td>videoSrc</td>
         <td>isautoplay</td>
         <td>posterSrc</td>
+        <td>closeVideo</td>
     </tr>
     <tr>
         <td>video 的 url</td>
         <td>是否自动播放，数据为rtmp强制为true 默认false</td>
         <td>video封面</td>
+        <td>是否关闭销毁vodeo，默认false</td>
     </tr>
 </table>
 
