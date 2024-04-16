@@ -1,3 +1,12 @@
+<!--
+ * @Descripttion:
+ * @version:
+ * @Author: liuyanbobo
+ * @Date: 2024-04-03 13:44:51
+ * @LastEditors: liuyanbobo
+ * @LastEditTime: 2024-04-16 15:27:17
+-->
+
 # Vue 项目名称
 
 vue3-video
@@ -20,7 +29,7 @@ vue3-video
         <td>video 的 url</td>
         <td>是否自动播放，数据为rtmp强制为true 默认false</td>
         <td>video封面</td>
-        <td>是否关闭销毁vodeo，默认false</td>
+        <td>是否关闭vodeo，默认false</td>
     </tr>
 </table>
 
