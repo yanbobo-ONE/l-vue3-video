@@ -4,7 +4,7 @@
  * @Author: liuyanbobo
  * @Date: 2024-04-03 13:56:51
  * @LastEditors: liuyanbobo
- * @LastEditTime: 2024-04-16 15:26:01
+ * @LastEditTime: 2024-04-16 16:17:36
 -->
 <template>
   <div class="videoBox">
@@ -125,7 +125,7 @@ const clickRefresh = async (val) => {
       src: props.videoSrc,
     });
     videojs("myVideoBigs").play();
-  }, 100);
+  });
 }
 //初始化视频
 const showvideo = (val, url) => {
@@ -223,25 +223,13 @@ watch(() => props.closeVideo, (newVal, oldVal) => {
 })
 //关闭销毁vieobox
 const handleLog = () => {
-  // var myVideoDiv = document.querySelectorAll("#myVideoBig");
-  // var myVideoDivles = document.querySelectorAll("#myVideoBigs");
-  // // myVideoDiv[0].innerHTML =
-  // //   "<video id='myVideoBig' class='video-js vjs-default-skin vjs-big-play-centered' muted='muted' autoplay='autoplay' loop='loop' data-setup='{}' style='object-fit: fill; width: 100%; height: 100%'><source src=" +
-  // //   videoedit.value +
-  // //   " style='width: 100%;height: 100%' type=" + format.value + "></video>";
-  // if (myVideoDivles.length > 0) {
-  //   playerolder.value.dispose();
-  //   playerolder.value = null;
-  // }
-  // player.value.dispose();
-  // player.value = null;
   nextTick(() => {
     videojs("myVideoBig").src({
       type: format.value,
       src: props.videoSrc,
     });
-    videojs("myVideoBig").play();
-  }, 100);
+    // videojs("myVideoBig").play();
+  });
 }
 onUnmounted(() => {
   if (RefreshButton.value) {

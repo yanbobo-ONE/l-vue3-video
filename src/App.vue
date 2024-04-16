@@ -26,6 +26,7 @@ const closeVideo = ref(false)
 //关闭销毁vodeo
 const closeVideos = () => {
   closeVideo.value = true
+  isautoplay.value = false
 }
 </script>
 <style lang="scss" scoped>
