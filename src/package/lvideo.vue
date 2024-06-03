@@ -4,11 +4,13 @@
  * @Author: liuyanbobo
  * @Date: 2024-04-03 13:56:51
  * @LastEditors: liuyanbobo
- * @LastEditTime: 2024-04-16 16:17:36
+ * @LastEditTime: 2024-06-01 17:38:24
 -->
 <template>
   <div class="videoBox">
-    <video id="myVideoBig"
+    <div v-if="isMasking"
+         class="Masking"></div>
+    <!-- <video id="myVideoBig"
            class="video-js vjs-default-skin vjs-big-play-centered"
            loop="loop"
            :poster="posterSrc"
@@ -20,7 +22,10 @@
               id="source"
               :type="format" />
       <p class="vjs-no-js">不支持播放</p>
-    </video>
+    </video> -->
+    <div class="videoConnet"
+         id="videoConnet"
+         v-html="videohtml"></div>
   </div>
 </template>
 <script>
@@ -63,6 +68,8 @@ const iscontrolBar = ref(true)//设为false不渲染控制条DOM元素，只设�
 const PlayOrder = ref(['html5', 'flash'])// 定义Video.js技术首选的顺序
 const isautoplays = ref(true)
 const format = ref("")//视频格式
+const videohtml = ref('')
+const isMasking = ref(true)
 const videoParameter = ref({
   autoplay: isautoplays.value, // 是否自动播放
   language: "zh-CN",
@@ -95,6 +102,7 @@ const videoParameter = ref({
 })
 //刷新视频
 const clickRefresh = async (val) => {
+  // videohtml.value = '<video id="myVideoBig"  class="video-js vjs-default-skin vjs-big-play-centered"  loop="loop"   style="object-fit: fill; width: 100%; height: 100%"   :poster="posterSrc"  data-setup=""  muted="muted"><source :src="videoSrc" ref="videos" id="source" :type="format" /><p class="vjs-no-js">不支持播放</p></video>'
   var myVideoDivles = document.querySelectorAll("#myVideoBig");
   if (myVideoDivles.length == 0) return
   myVideoDivles[0].innerHTML =
@@ -129,6 +137,7 @@ const clickRefresh = async (val) => {
 }
 //初始化视频
 const showvideo = (val, url) => {
+  // videohtml.value = '<video id="myVideoBig"  class="video-js vjs-default-skin vjs-big-play-centered"  loop="loop"   style="object-fit: fill; width: 100%; height: 100%"   :poster="posterSrc"  data-setup=""  muted="muted"><source :src="videoSrc" ref="videos" id="source" :type="format" /><p class="vjs-no-js">不支持播放</p></video>'
   nextTick(() => {
     videojs.options.flash.swf = 'public/static/js/video-js.swf';
     player.value = videojs(
@@ -136,10 +145,21 @@ const showvideo = (val, url) => {
       videoParameter.value,
       function () {
         videojs.log('播放量+1!'); // 比如： 播放量+1请求
+        // isMasking.value = false
         player.value.on('ended', function () {
           videojs.log('Awww...这么快就结束了?!');
         });
+        player.value.on('play', function () {
+          isMasking.value = false
+          console.log('开始播放')
+        });
+        player.value.on('loadeddata', function () {
+          console.log('视频加载完成！');
+          isMasking.value = false
+        });
         player.value.on("error", function () {
+          console.log('错误')
+          isMasking.value = false
           var errorMessage = player.value.error().message;
           console.log('Video.js 播放器遇到错误：', errorMessage);
           var myVideoDivles = document.querySelectorAll("#myVideoBig");
@@ -194,6 +214,7 @@ const currency = (newVal) => {
 }
 watch(() => props.videoSrc, (newVal, oldVal) => {
   if (newVal) {
+    videohtml.value = '<video id="myVideoBig"  class="video-js vjs-default-skin vjs-big-play-centered"  loop="loop"   style="object-fit: fill; width: 100%; height: 100%"   :poster="posterSrc"  data-setup=""  muted="muted"><source :src="videoSrc" ref="videos" id="source" :type="format" /><p class="vjs-no-js">不支持播放</p></video>'
     if (newVal.includes('rtmp')) {
       videoParameter.value.controls = false
       videoParameter.value.controlBar = false
@@ -224,11 +245,19 @@ watch(() => props.closeVideo, (newVal, oldVal) => {
 //关闭销毁vieobox
 const handleLog = () => {
   nextTick(() => {
-    videojs("myVideoBig").src({
-      type: format.value,
-      src: props.videoSrc,
-    });
-    // videojs("myVideoBig").play();
+    isMasking.value = true
+    videohtml.value = '';
+    videojs("myVideoBig").dispose()
+    setTimeout(() => {
+      videohtml.value = '<video id="myVideoBig"  class="video-js vjs-default-skin vjs-big-play-centered"  loop="loop"   style="object-fit: fill; width: 100%; height: 100%"   :poster="posterSrc"  data-setup=""  muted="muted"><source :src="videoSrc" ref="videos" id="source" :type="format" /><p class="vjs-no-js">不支持播放</p></video>'
+    }, 1000)
+    setTimeout(() => {
+      if (props.videoSrc.includes('rtmp')) {
+        showvideo(1, props.videoSrc)
+      } else {
+        currency(props.videoSrc)
+      }
+    }, 2000)
   });
 }
 onUnmounted(() => {
@@ -285,11 +314,23 @@ onUnmounted(() => {
 ::v-deep.video-js .vjs-remaining-time {
   display: none;
 }
-.myVideoBig-dimensions.vjs-fluid {
+::v-deep .myVideoBig-dimensions.vjs-fluid {
   padding-top: 0;
 }
 .videoBox {
   width: 100%;
   height: 100%;
+  position: relative;
+}
+.videoConnet {
+  width: 100%;
+  height: 100%;
+}
+.Masking {
+  width: 100%;
+  height: 100%;
+  background: black;
+  z-index: 99999;
+  position: absolute;
 }
 </style>
