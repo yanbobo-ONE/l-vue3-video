@@ -4,7 +4,7 @@
  * @Author: liuyanbobo
  * @Date: 2024-04-03 13:44:51
  * @LastEditors: liuyanbobo
- * @LastEditTime: 2024-06-01 17:37:44
+ * @LastEditTime: 2024-07-18 16:26:04
 -->
 
 
@@ -23,11 +23,12 @@ import { ref } from "vue"
 import lVue3Video from "./package/lvideo.vue"
 import { getAssetsResource } from './utils/CommonFun.js'
 // https://sdk-release.qnsdk.com/VID_20220207_144828.mp4
+//https://media.w3.org/2010/05/sintel/trailer.mp4
 // rtmp://liteavapp.qcloud.com/live/liteavdemoplayerstreamid
 // http://cdn3.toronto360.tv:8081/toronto360/hd/playlist.m3u8
 //失败测试
 // https://sdk-release.qnsdk.com/1080_60_5390.mp4
-const videoSrc = ref('https://sdk-release.qnsdk.com/VID_20220207_144828.mp4')
+const videoSrc = ref('https://media.w3.org/2010/05/sintel/trailer.mp4')
 const isautoplay = ref(false)//是否自动播放
 const posterSrc = ref(getAssetsResource('bg.jpg'))
 const closeVideo = ref(false)

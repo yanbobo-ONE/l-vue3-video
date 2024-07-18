@@ -4,7 +4,7 @@
  * @Author: liuyanbobo
  * @Date: 2024-04-03 13:56:51
  * @LastEditors: liuyanbobo
- * @LastEditTime: 2024-06-01 17:38:24
+ * @LastEditTime: 2024-07-18 16:25:09
 -->
 <template>
   <div class="videoBox">
@@ -69,6 +69,7 @@ const PlayOrder = ref(['html5', 'flash'])// 定义Video.js技术首选的顺序
 const isautoplays = ref(true)
 const format = ref("")//视频格式
 const videohtml = ref('')
+const lastOutput = ref(1)
 const isMasking = ref(true)
 const videoParameter = ref({
   autoplay: isautoplays.value, // 是否自动播放
@@ -106,7 +107,7 @@ const clickRefresh = async (val) => {
   var myVideoDivles = document.querySelectorAll("#myVideoBig");
   if (myVideoDivles.length == 0) return
   myVideoDivles[0].innerHTML =
-    "<video id='myVideoBigs' class='video-js vjs-default-skin vjs-big-play-centered'  muted='muted' autoplay='autoplay' loop='loop' data-setup='{}' style='object-fit: fill; width: 100%; height: 100%'><source src=" +
+    "<video id='myVideoBigs' class='video-js vjs-default-skin vjs-big-play-centered'   autoplay='autoplay' loop='loop' data-setup='{}' style='object-fit: fill; width: 100%; height: 100%'><source src=" +
     videoedit.value +
     " style='width: 100%;height: 100%' type=" + format.value + "></video>";
   nextTick(() => {
@@ -118,14 +119,18 @@ const clickRefresh = async (val) => {
         // 获取按钮元素
         RefreshButton.value = document.querySelector('.Refresh');
         RefreshButton.value.addEventListener('click', function (event) {
-          clickRefresh()
+          lastOutput.value++
+          clickRefresh(lastOutput.value)
         });
-        return ElMessage({
-          message: "视频播放失败，请检查并刷新",
-          type: "warning",
-          duration: 5000,
-          offset: 80,
-        });
+        if (!val) {
+          return ElMessage({
+            message: "视频播放失败，请检查并刷新",
+            type: "warning",
+            duration: 5000,
+            offset: 80,
+          });
+        }
+
       });
     });
     videojs("myVideoBigs").src({
@@ -157,6 +162,20 @@ const showvideo = (val, url) => {
           console.log('视频加载完成！');
           isMasking.value = false
         });
+        player.value.on('pause', function () {
+          console.log('视频已暂停');
+          var playPauseButton = player.value.controlBar.playToggle.el();
+          playPauseButton.classList.remove('vjs-playing');
+          playPauseButton.classList.add('vjs-paused');
+          // player.value.currentTime(0); // Reset the video time to 0
+        });
+
+        player.value.on('play', function () {
+          console.log('视频正在播放');
+          var playPauseButton = player.value.controlBar.playToggle.el();
+          playPauseButton.classList.remove('vjs-paused');
+          playPauseButton.classList.add('vjs-playing');
+        });
         player.value.on("error", function () {
           console.log('错误')
           isMasking.value = false
@@ -170,15 +189,115 @@ const showvideo = (val, url) => {
           RefreshButton.value.addEventListener('click', function (event) {
             clickRefresh()
           });
-          return ElMessage({
-            message: "视频播放失败，请检查并刷新",
-            type: "warning",
-            duration: 5000,
-            offset: 80,
-          });
+          // return ElMessage({
+          //   message: "视频播放失败，请检查并刷新",
+          //   type: "warning",
+          //   duration: 5000,
+          //   offset: 80,
+          // });
         });
       }
     );
+
+    player.value.ready(function () {
+      console.log('Player is ready');
+      // 获取音量控制滚动条
+      var volumeControl = player.value.controlBar.volumePanel.volumeControl;
+      // 设置音量为 30%
+      // player.value.volume(0.3);
+      // 获取音量面板元素
+      var volumePanel = player.value.controlBar.volumePanel.el();
+      // 获取静音控制按钮元素
+      var muteControl = volumePanel.querySelector('.vjs-mute-control');
+      // 监听音量面板的点击事件
+      muteControl.addEventListener('click', function () {
+        // 切换静音状态
+        if (!player.value.muted()) {
+          player.value.muted(false);
+          muteControl.classList.remove('vjs-vol-0');
+        } else {
+          player.value.muted(true);
+          player.value.volume(0);
+          muteControl.classList.add('vjs-vol-0');
+        }
+      });
+      // // 获取音量滑块元素
+      // var volumeBar = volumePanel.querySelector('.vjs-volume-bar');
+      // // 监听音量滑块的拖动事件
+      // volumeBar.addEventListener('mousedown', function () {
+      //   var mousemoveHandler = function (event) {
+      //     // 计算新的音量值
+      //     var newVolume = event.offsetX / volumeBar.offsetWidth;
+      //     player.value.volume(newVolume);
+      //   };
+      //   var mouseupHandler = function () {
+      //     document.removeEventListener('mousemove', mousemoveHandler);
+      //     document.removeEventListener('mouseup', mouseupHandler);
+      //   };
+      //   document.addEventListener('mousemove', mousemoveHandler);
+      //   document.addEventListener('mouseup', mouseupHandler);
+      // });
+      // 监听音量控制按钮的点击事件
+      volumeControl.el().addEventListener('click', function () {
+        // 切换静音状态
+        if (player.value.muted()) {
+          player.value.muted(false);
+          volumeControl.el().classList.remove('vjs-vol-0');
+        } else {
+          player.value.muted(true);
+          volumeControl.el().classList.add('vjs-vol-0');
+        }
+      });
+      //确保启用了进度控制
+      // 删除默认剩余时间显示
+      player.value.controlBar.remainingTimeDisplay.hide();
+      // 创建自定义时间显示
+      var CustomTimeDisplay = videojs.getComponent('Component');
+      var customTimeDisplay = new CustomTimeDisplay();
+      // 将类添加到自定义时间显示中
+      customTimeDisplay.addClass('vjs-time-control');
+      customTimeDisplay.addClass('vjs-control');
+      // 将自定义时间显示添加到控制栏
+      player.value.controlBar.addChild(customTimeDisplay);
+      // Update the custom time display
+      function updateCustomTimeDisplay () {
+        var duration = player.value.duration();
+        var currentTime = player.value.currentTime();
+        var remainingTime = duration - currentTime;
+        customTimeDisplay.el().textContent = formatTime(remainingTime);
+        var playProgress = document.querySelector('.vjs-play-progress');
+        if (playProgress) {
+          var duration = player.value.duration();
+          var currentTime = player.value.currentTime();
+          var progressPercentage = (currentTime / duration) * 100;
+          playProgress.style.width = progressPercentage + '%';
+        }
+        var timeTooltip = document.querySelector('.vjs-play-progress .vjs-time-tooltip');
+        if (timeTooltip) {
+          var currentTime = player.value.currentTime();
+          var formattedTime = formatTime(currentTime);
+          timeTooltip.textContent = formattedTime;
+        }
+      }
+      // 格式化时间 MM:SS
+      function formatTime (seconds) {
+        var minutes = Math.floor(seconds / 60);
+        var seconds = Math.floor(seconds % 60);
+        return (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+      }
+      // 最初更新自定义时间显示
+      updateCustomTimeDisplay();
+      // Add an event listener for the timeupdate event 时间更新
+      player.value.on('timeupdate', updateCustomTimeDisplay);
+      // Add an event listener for the seeking event 拖拽
+      player.value.on('seeking', function () {
+        player.value.currentTime()
+      });
+      // Add an event listener for the seeked event 拖拽
+      player.value.on('seeked', function () {
+        player.value.currentTime()
+      });
+    });
     videojs("myVideoBig").src({
       type: format.value,
       src: url,
@@ -214,7 +333,7 @@ const currency = (newVal) => {
 }
 watch(() => props.videoSrc, (newVal, oldVal) => {
   if (newVal) {
-    videohtml.value = '<video id="myVideoBig"  class="video-js vjs-default-skin vjs-big-play-centered"  loop="loop"   style="object-fit: fill; width: 100%; height: 100%"   :poster="posterSrc"  data-setup=""  muted="muted"><source :src="videoSrc" ref="videos" id="source" :type="format" /><p class="vjs-no-js">不支持播放</p></video>'
+    videohtml.value = '<video id="myVideoBig"  class="video-js vjs-default-skin vjs-big-play-centered "  loop="loop"   style="object-fit: fill; width: 100%; height: 100%"   :poster="posterSrc"  data-setup=""  ><source :src="videoSrc" ref="videos" id="source" :type="format" /><p class="vjs-no-js">不支持播放</p></video>'
     if (newVal.includes('rtmp')) {
       videoParameter.value.controls = false
       videoParameter.value.controlBar = false
@@ -249,7 +368,7 @@ const handleLog = () => {
     videohtml.value = '';
     videojs("myVideoBig").dispose()
     setTimeout(() => {
-      videohtml.value = '<video id="myVideoBig"  class="video-js vjs-default-skin vjs-big-play-centered"  loop="loop"   style="object-fit: fill; width: 100%; height: 100%"   :poster="posterSrc"  data-setup=""  muted="muted"><source :src="videoSrc" ref="videos" id="source" :type="format" /><p class="vjs-no-js">不支持播放</p></video>'
+      videohtml.value = '<video id="myVideoBig"  class="video-js vjs-default-skin vjs-big-play-centered"  loop="loop"   style="object-fit: fill; width: 100%; height: 100%"   :poster="posterSrc"  data-setup="" ><source :src="videoSrc" ref="videos" id="source" :type="format" /><p class="vjs-no-js">不支持播放</p></video>'
     }, 1000)
     setTimeout(() => {
       if (props.videoSrc.includes('rtmp')) {
@@ -275,12 +394,12 @@ onUnmounted(() => {
   cursor: pointer;
 }
 //视频暂停时显示中间暂停按钮
-::v-deep.vjs-paused .vjs-big-play-button,
+::v-deep .vjs-paused .vjs-big-play-button,
 .vjs-paused.vjs-has-started .vjs-big-play-button {
   display: block;
 }
 //改变暂停按钮的样式改成圆形
-::v-deep.video-js .vjs-big-play-button {
+::v-deep .video-js .vjs-big-play-button {
   font-size: 2.5em;
   line-height: 2.3em;
   height: 2.5em;
@@ -295,11 +414,11 @@ onUnmounted(() => {
   margin-left: -1.75em;
 }
 /* 中间的播放箭头 */
-::v-deep.vjs-big-play-button .vjs-icon-placeholder {
+::v-deep .vjs-big-play-button .vjs-icon-placeholder {
   font-size: 1.63em;
 }
 /* 加载圆圈 */
-::v-deep.vjs-loading-spinner {
+::v-deep .vjs-loading-spinner {
   font-size: 2.5em;
   width: 2em;
   height: 2em;
@@ -308,11 +427,11 @@ onUnmounted(() => {
   margin-left: -1.5em;
 }
 //进度显示当前播放时间
-::v-deep.video-js .vjs-time-control {
-  display: block;
+::v-deep .video-js .vjs-time-control {
+  // display: block;
 }
-::v-deep.video-js .vjs-remaining-time {
-  display: none;
+::v-deep .video-js .vjs-remaining-time {
+  // display: none;
 }
 ::v-deep .myVideoBig-dimensions.vjs-fluid {
   padding-top: 0;
